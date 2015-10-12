@@ -1,0 +1,94 @@
+#!ipxe
+# Adapted from <https://gist.github.com/robinsmidsrod/2234639>
+# 2015 Alexandre Lopes
+
+echo 
+echo Welcome to the iPXE boot
+echo 
+
+
+# Some boot server defaults
+# unfortunately, while name resolution will work with
+# iPXE, it will fail when mounting an nfs root filesystem
+# This should, however be solvable
+set server 192.168.1.105
+set nfs_path /var/nfs
+
+# Some menu defaults
+set menu-timeout 5000
+set submenu-timeout ${menu-timeout}
+set menu-default ubuntu-install
+isset ${menu-default} || set menu-default exit
+
+# Figure out if client is 64-bit capable
+cpuid --ext 29 && set arch x64 || set arch x86
+cpuid --ext 29 && set archl amd64 || set archl i386
+
+###################### MAIN MENU ####################################
+dhcp
+
+:start
+menu iPXE boot menu
+item --gap --               ------------------------- Operating systems ------------------------------
+item --key i ubuntu-install Install Ubuntu
+item --key l ubuntu-live    Run liveCD 
+item --gap --               ------------------------- Advanced options -------------------------------
+item --key c config         Configure settings
+item shell                  Drop to iPXE shell
+item reboot                 Reboot computer
+item
+item --key x exit           Exit iPXE and continue BIOS boot
+choose --timeout ${menu-timeout} --default ${menu-default} selected || goto cancel
+set menu-timeout 0
+goto ${selected}
+
+:cancel
+echo You cancelled the menu, dropping you to a shell
+
+:shell
+echo Type 'exit' to get the back to the menu
+shell
+set menu-timeout 0
+set submenu-timeout 0
+goto start
+
+:failed
+echo Booting failed, dropping to shell
+goto shell
+
+:reboot
+reboot
+
+:exit
+exit
+
+:config
+config
+goto start
+
+:back
+set submenu-timeout 0
+clear submenu-default
+goto start
+
+############ MAIN MENU ITEMS ############
+
+:ubuntu-install
+set preseed_dir preseeds
+set preseed pressed.cfg
+
+echo Booting Ubuntu installer
+kernel nfs://${server}${nfs_path}/casper/vmlinuz.efi || goto failed
+initrd nfs://${server}${nfs_path}/casper/initrd.lz || goto failed
+imgargs vmlinuz.efi root=/dev/nfs boot=casper netboot=nfs nfsroot=${server}:${nfs_path} ip=dhcp auto=true priority=critical url=http://${server}/preseed.cfg automatic-ubiquity splash quiet 
+boot || goto failed
+goto start
+
+:ubuntu-live
+echo Booting Ubuntu LiveCD
+dhcp
+kernel nfs://${server}${nfs_path}/casper/vmlinuz.efi || goto failed
+initrd nfs://${server}${nfs_path}/casper/initrd.lz || goto failed
+imgargs vmlinuz.efi root=/dev/nfs boot=casper netboot=nfs nfsroot=${server}:${nfs_path} ip=dhcp splash quiet 
+boot || goto failed
+goto start
