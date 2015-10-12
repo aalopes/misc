@@ -1,4 +1,4 @@
-# What is this?
+## What is this?
 
 Some files to build an automated network Ubuntu installation using iPXE.
 Tested with Ubuntu 14.04.x LTS
@@ -9,9 +9,10 @@ with Canonical's Ubiquity. This means that the preseed is a bit
 different from a pure Debian one.
 
 BTW, if you're looking to do the same for Red Hat based distros, google for 
-'Kickstart Installation'.
+"Kickstart Installation".
+
 ===============================================================================
-# Components
+## Components
 
 You will need the following components:
 
@@ -21,7 +22,7 @@ You will need the following components:
 * A local repo server if your machine does not have access to the internet
 
 ===============================================================================
-# ISO
+## ISO
 
 You will need to decompress the ISO to your server an expose it using NFS.
 To that effect the instructions in <http://ipxe.org/appnote/ubuntu_live>
@@ -36,7 +37,7 @@ Then restart the nfs deamon (the exact way to do it will depend on the distro
                              you are using on your server machine).
 
 ===============================================================================
-# Boot
+## Boot
 
 Here's a small flowchart of the boot process
 (the one I used, modifications are possible)
@@ -78,7 +79,7 @@ Here's a small flowchart of the boot process
 The pressed file is available at presseed.cfg.
 
 ===============================================================================
-# Packages
+## Packages
 
 If in need to obtain official Ubuntu packages (without cloning the entire
 Ubuntu repos, which are huge) in order to create a local repo, you can, 
@@ -88,7 +89,7 @@ using the apt-cacher-ng software or using apt-get as:
     sudo apt-get --download-only install <package_name>
 
 ===============================================================================
-# Sources
+## Sources
 
 <http://ipxe.org/>
 <https://wiki.debian.org/DebianInstaller/Preseed>
@@ -96,6 +97,6 @@ using the apt-cacher-ng software or using apt-get as:
 partman-auto-recipe.txt (included in the 'debian-installer' package)
 
 ===============================================================================
-# Author
+## Author
 
 2015 Alexandre Lopes
