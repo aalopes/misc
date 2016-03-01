@@ -76,7 +76,7 @@ Here's a small flowchart of the boot process
     |   specified in preseed    |
     +---------------------------+
     
-The pressed file is available at presseed.cfg.
+The preseed file is available at presseed.cfg.
 
 ===============================================================================
 ## Packages
@@ -87,6 +87,22 @@ after a fresh Ubuntu installation on a machine with internet access
 (be it a virtual one or whatsohever), download packages and dependencies 
 using the apt-cacher-ng software or using apt-get as:
     sudo apt-get --download-only install <package_name>
+
+===============================================================================
+## Bugs
+
+At the moment there is a known bug which prevents the installer kernel from 
+getting an IP address via DHCP. The kernel eventually panics after a given 
+number of tries:
+
+<https://bugs.launchpad.net/ubuntu/+source/klibc/+bug/1327412>
+
+This is still to be solved, but passing the IP address that the iPXE ROM gets 
+from the DHCP server might suffice (ip=${ip}). This remains to be done.
+
+Note that this doesn't happen if everything is run on a virtual machine
+(which is where the installation was originally tested, and where everything
+worked).
 
 ===============================================================================
 ## Sources
