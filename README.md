@@ -7,5 +7,4 @@ At the moment there's the following
 * preseed for installing Ubuntu 14.04 LTS (tested on Desktop version) 
 * post-install script example
 
-(so only stuff for a Debian/Ubuntu automated installation)
-
+* a small script for configuring Xenomai for cross-compiling for the ARM
